@@ -2,12 +2,12 @@
 /*
 Plugin Name: WordPress Praiser
 Description: WordPress Praiser plugin lets you display Praises (or Testimonials) in a sidebar on your WordPress blog or fill a whole page using a short code. This plugin allows for an image of the prasier.
-Version: 1.3
+Version: 1.5
 Author: cShellFranklin
 License: GPL2
 */
 
-/*  Copyright 2011 cShellFranklin
+/*  Copyright 2015 cShellFranklin
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ License: GPL2
 /*  Refer http://codex.wordpress.org/Roles_and_Capabilities */
 $wp_praiser_admin_userlevel = 'edit_posts'; 
 
-$wp_praiser_db_version = '1.3'; 
+$wp_praiser_db_version = '1.5'; 
 
 require_once('wp-praiser-widget.php');
 require_once('wp-praiser-admin.php');
@@ -100,7 +100,7 @@ EOF;
 	$first = true;
 	foreach ($praises as $praise) {
     if ($praise['img_name']=="") {
-    	$img_name = plugins_url(). "/wp-praiser/60x60.png";
+    	$img_name = plugins_url(). "/wordpress-praiser/60x60.png";
     } else {
         $img_name = $praise['img_name'];
 	}
@@ -111,6 +111,7 @@ EOF;
                 content:"";
             }
         </style>
+       
 <?PHP
 
 	}
@@ -193,7 +194,7 @@ if($tags) {
 	$first = true;
 	foreach ($praises as $praise) {
     if ($praise['img_name']=="") {
-    	$img_name = plugins_url(). "/wp-praiser/60x60.png";
+    	$img_name = plugins_url(). "/wordpress-praiser/60x60.png";
     } else {
         $img_name = $praise['img_name'];
 	}
@@ -216,7 +217,7 @@ if($tags) {
 		$html .= '<table style="border:none; vertical-align:middle; margin: 0; padding: 5px 5px 5px 5px;">';
 		$html .= "<p style='font-size: " . $char_size . "px;'>";
 		
-		$html .= "<img src=". $img_name ." style='float: left; margin: auto 4px;'>";
+		$html .= "<img src=". $img_name ." style='float: left; margin: auto 4px; height:80px; width:80px;'>";
 		$html .= "</P></TD><TD style='width: 100%;'>";
 		$html .= "<p style='font-size: " . $char_size . "px; width: 80%;'>";
 		$html .= "<q>". $praise['praise'] ."";
@@ -313,7 +314,7 @@ function wp_praiser_install()
 function wp_praiser_css_head() 
 {
 	?>
-	<link rel="stylesheet" type="text/css" href="<?php echo plugins_url(); ?>/wp-praiser/wp-praiser.css" />
+	<link rel="stylesheet" type="text/css" href="<?php echo plugins_url(); ?>/wordpress-praiser/css/wp-praiser.css" />
 	<?php
 }
 

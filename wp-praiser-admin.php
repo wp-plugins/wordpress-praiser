@@ -140,6 +140,8 @@ function wp_praiser_addpraise($praise, $author = "", $source = "", $tags = "", $
 		$praise = "'".$wpdb->escape($praise)."'";
 		$author = $author?"'".$wpdb->escape($author)."'":"NULL";
 		$source = $source?"'".$wpdb->escape($source)."'":"NULL";
+		$img_name = $img_name?"'".$wpdb->escape($img_name)."'":"NULL";
+
 		$tags = explode(',', $tags);
 		foreach ($tags as $key => $tag)
 			$tags[$key] = trim($tag);
@@ -179,7 +181,7 @@ function wp_praiser_editpraise($praise_id, $praise, $author = "", $source = "", 
 		$source = $source?"'".$wpdb->escape($source)."'":"NULL";
 		$tags = explode(',', $tags);
 		$img_name = $img_name?"'".$wpdb->escape($img_name)."'":"NULL";
-		echo "$img_name";
+//		echo "$img_name";
 		foreach ($tags as $key => $tag)
 			$tags[$key] = trim($tag);
 		$tags = implode(',', $tags);
@@ -245,7 +247,6 @@ function wp_praiser_editform($praise_id = 0)
 		$praise = htmlspecialchars($praise);
 		$author = htmlspecialchars($author);
 		$source = htmlspecialchars($source);
-//		$img_name = str_replace("&#47;", "/", $img_name);
 		$tags = implode(', ', explode(',', $tags));
 		$hidden_input = "<input type=\"hidden\" name=\"praise_id\" value=\"{$praise_id}\" />";
 		if($public == 'no') $public_selected = "";
@@ -256,14 +257,13 @@ function wp_praiser_editform($praise_id = 0)
 
 	$praise_label = __('The praise', 'wp-praiser');
 	$author_label = __('Author', 'wp-praiser');
-	$source_label = __('Source', 'wp-praiser');
+	$source_label = __('Source<BR><small><small>(Company, website, blog, etc.)</small></small>', 'wp-praiser');
 	$tags_label = __('Tags', 'wp-praiser');
 	$public_label = __('Public?', 'wp-praiser');
 	$optional_text = __('optional', 'wp-praiser');
 	$comma_separated_text = __('comma separated', 'wp-praiser');
 	$img_name_label = __('Picture<BR><small><small>(60x60 pixel image)</small></small>', 'wp-praiser');
-	$img_generic = __(plugins_url(). '/wp-praiser/60x60.png', 'wp-praiser');
-	$upload_image_url = __(bloginfo('name'). '/wp-admin/media-upload.php?type=image&amp;TB_iframe=true&amp;width=640&amp;height=105', 'wp-praiser');
+	$img_generic = __(plugins_url(). '/wordpress-praiser/60x60.png', 'wp-praiser');
 
 	$display =<<< EDITFORM
 <form name="{$form_name}" method="post" action="{$action_url}">
@@ -287,7 +287,41 @@ function wp_praiser_editform($praise_id = 0)
 		</tr>
 		<tr>
 			<th style="text-align:left;" scope="row" valign="top"><label for="wp_praiser_img_name">{$img_name_label}</label></th>
-			<td valign="top"><label for="upload_image"><input type="text" id="wp_praiser_img_name" name="img_name" size="50" value="{$img_name}" /> <input id="upload_image_button" type="button" value="Upload Image" />
+			<td valign="top"><label for="upload_image">
+<input type="text" id="wp_praiser_img_name" name="img_name" size="50" value="{$img_name}" /> 
+			
+    <input class="upload_image_button" type="button" value="Upload Image" />
+
+
+<script type="text/javascript">
+    //tb_show('', 'media-upload.php?TB_iframe=true');
+    var upload_image_button=false;
+    jQuery(document).ready(function() {
+
+    jQuery('.upload_image_button').click(function() {
+        upload_image_button =true;
+        formfieldID=jQuery(this).prev().attr("id");
+     formfield = jQuery("#"+formfieldID).attr('name');
+     tb_show('', 'media-upload.php?type=image&amp;TB_iframe=true');
+        if(upload_image_button==true){
+
+                var oldFunc = window.send_to_editor;
+                window.send_to_editor = function(html) {
+
+                imgurl = jQuery('img', html).attr('src');
+                jQuery("#"+formfieldID).val(imgurl);
+                 tb_remove();
+                window.send_to_editor = oldFunc;
+                }
+        }
+        upload_image_button=false;
+    });
+
+
+    })
+
+</script>		
+			
 		<br />&nbsp;&nbsp;If Left blank <img height="30" width="30" src="{$img_generic}"> will be used.<BR>
 		</label>
 
@@ -447,7 +481,7 @@ function wp_praiser_praises_management()
 	
 	foreach($praises as $praise_data) {
 		if ($praise_data->img_name=="") {
-    	$img_name = plugins_url(). "/wp-praiser/60x60.png";
+    	$img_name = plugins_url(). "/wordpress-praiser/60x60.png";
     } else {
         $img_name = $praise_data->img_name;
 	}
@@ -461,7 +495,7 @@ function wp_praiser_praises_management()
 		$praises_list .= wptexturize(nl2br(make_clickable($praise_data->praise)));
     	$praises_list .= "<div class=\"row-actions\"><span class=\"edit\"><a href=\"{$admin_url}&action=editpraise&amp;id=".$praise_data->praise_id."\" class=\"edit\">".__('Edit', 'wp-praiser')."</a></span> | <span class=\"trash\"><a href=\"{$admin_url}&action=delpraise&amp;id=".$praise_data->praise_id."\" onclick=\"return confirm( '".__('Are you sure you want to delete this praise?', 'wp-praiser')."');\" class=\"delete\">".__('Delete', 'wp-praiser')."</a></span></div>";
 		$praises_list .= "</td>";
-		$praises_list .= "<td><img src=$img_name></td>";
+		$praises_list .= "<td><img height=60 width=60 src=$img_name></td>";
 		$praises_list .= "<td>" . make_clickable($praise_data->author);
 		if($praise_data->author && $praise_data->source)
 			$praises_list .= " / ";

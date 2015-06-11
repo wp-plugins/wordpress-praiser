@@ -1,0 +1,41 @@
+.wp_praiser_praise q {
+}
+.wp_praiser_praise cite {
+	display:block; /* To display author and source in a new line */
+	text-align:left; 
+}
+.wp_praiser_author { 
+	font-style: italic;
+	font-weight:bold;
+}
+.wp_praiser_source { 
+	font-style: normal;
+}
+q:lang(en)
+{
+	quotes: "“" "”" "‘" "’";
+}
+.wp_praiser_praises { 
+	position: relative;
+}
+.wp_praiser_praise { 
+	position: absolute; 
+	top: 0;
+	left: 0;
+	display: none;
+}
+.wp_praiser_praises .wp_praiser_active {
+	display: block;
+}
+.wp_praiser_praises p {
+	margin: 5px 5px 5px 5px;
+}
+.wp_praiser_praises img {
+	margin: 5px 5px 5px 5px;
+	height:60px;
+	width:60px;
+}
+
+h4.wp_praiser {
+	margin: 0;
+}
